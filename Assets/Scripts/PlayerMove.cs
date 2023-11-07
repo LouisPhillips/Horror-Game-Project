@@ -35,6 +35,11 @@ public class PlayerMove : MonoBehaviour
     public float jumpCooldown;
     public bool canJump = true;
 
+    [Header("Flashlight")]
+    public GameObject flashlight;
+    private bool flashing = false;
+    private int flashOn = 0;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -49,6 +54,8 @@ public class PlayerMove : MonoBehaviour
 
         playerControls.Movement.Look.performed += context => mouseRotation = context.ReadValue<Vector2>();
         playerControls.Movement.Look.canceled += context => mouseRotation = Vector2.zero;
+
+        playerControls.Movement.Flash.performed += context => flashOn += 1;
     }
 
     // Update is called once per frame
@@ -59,7 +66,6 @@ public class PlayerMove : MonoBehaviour
         {
             rb.AddForce(direction.normalized * speed * 10f, ForceMode.Force);
         }
-
     }
 
     private void Update()
@@ -85,12 +91,30 @@ public class PlayerMove : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
+        UseFlashlight();
     }
 
     private void Jump()
     {
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+
+    private void UseFlashlight()
+    {
+        if (flashOn == 0)
+        {
+            flashlight.SetActive(false);
+        }
+        else if (flashOn == 1)
+        {
+            flashlight.SetActive(true);
+        }
+
+        if (flashOn >= 2)
+        {
+            flashOn = 0;
+        }
     }
 
     private void ResetJump()
