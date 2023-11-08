@@ -24520,6 +24520,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2060400499}
     - target: {fileID: 4217688220070971017, guid: f99ea613bc8bd5f428ad642e4fbefd1d, type: 3}
+      propertyPath: sprintSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4217688220070971017, guid: f99ea613bc8bd5f428ad642e4fbefd1d, type: 3}
       propertyPath: sensitivityX
       value: 1
       objectReference: {fileID: 0}

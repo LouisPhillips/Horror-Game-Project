@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 433faa8b758afed4f9295b193c697276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _PixelationFactor: 0.25
+  _PixelationFactor: 0.4
   _ColorEmulationMode: 3
   _FullscreenColorDepth: {x: 256, y: 256, z: 256}
   _FullscreenDitherDepth: {x: 32, y: 32, z: 32}
@@ -272,6 +272,7 @@ MonoBehaviour:
   jumpForce: 10
   jumpCooldown: 2
   canJump: 0
+  flashlight: {fileID: 0}
 --- !u!114 &4217688220070971019
 MonoBehaviour:
   m_ObjectHideFlags: 0

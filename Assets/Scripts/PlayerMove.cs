@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-  
+
     private PlayerControls playerControls;
 
     [Header("Movement")]
     private Vector2 movement;
     private Rigidbody rb;
     private Vector3 direction;
-    public float speed = 10f;
+    public float speed = 3f;
+    public float sprintSpeed = 5f;
+    private bool sprinting;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -46,7 +48,7 @@ public class PlayerMove : MonoBehaviour
         playerControls = new PlayerControls();
         rb = GetComponent<Rigidbody>();
 
-        Cursor.lockState = CursorLockMode.Locked;   
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         playerControls.Movement.Walk.performed += context => movement = context.ReadValue<Vector2>();
@@ -55,13 +57,25 @@ public class PlayerMove : MonoBehaviour
         playerControls.Movement.Look.performed += context => mouseRotation = context.ReadValue<Vector2>();
         playerControls.Movement.Look.canceled += context => mouseRotation = Vector2.zero;
 
+        playerControls.Movement.Sprint.performed += context => sprinting = true;
+        playerControls.Movement.Sprint.canceled += context => sprinting = false;
+
         playerControls.Movement.Flash.performed += context => flashOn += 1;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        direction = transform.forward * movement.y + transform.right * movement.x;
+        if (!sprinting)
+        {
+
+            Move(speed);
+        }
+        else
+        {
+            Move(sprintSpeed);
+        }
+
         if (grounded)
         {
             rb.AddForce(direction.normalized * speed * 10f, ForceMode.Force);
@@ -71,11 +85,6 @@ public class PlayerMove : MonoBehaviour
     private void Update()
     {
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, ground);
-
-        if (grounded)
-        {
-            rb.drag = groundDrag;
-        }
 
         yRotation += mouseRotation.x;
         xRotation -= mouseRotation.y;
@@ -98,6 +107,12 @@ public class PlayerMove : MonoBehaviour
     {
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+
+    private void Move(float type)
+    {
+        Vector3 playerDirection = (movement.y * transform.forward) + (movement.x * transform.right);
+        transform.position += playerDirection * type * Time.deltaTime;
     }
 
     private void UseFlashlight()
