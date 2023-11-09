@@ -38,9 +38,7 @@ public class PlayerMove : MonoBehaviour
     public bool canJump = true;
 
     [Header("Flashlight")]
-    public GameObject flashlight;
-    private bool flashing = false;
-    private int flashOn = 0;
+    public Flashlight flashlight;
 
     // Start is called before the first frame update
     void Awake()
@@ -60,7 +58,7 @@ public class PlayerMove : MonoBehaviour
         playerControls.Movement.Sprint.performed += context => sprinting = true;
         playerControls.Movement.Sprint.canceled += context => sprinting = false;
 
-        playerControls.Movement.Flash.performed += context => flashOn += 1;
+        playerControls.Movement.Flash.performed += context => flashlight.flashOn += 1;
     }
 
     // Update is called once per frame
@@ -117,18 +115,20 @@ public class PlayerMove : MonoBehaviour
 
     private void UseFlashlight()
     {
-        if (flashOn == 0)
+        if (flashlight.flashOn == 0)
         {
-            flashlight.SetActive(false);
+            flashlight.flashlight.SetActive(false);
+            flashlight.flashing = false;
         }
-        else if (flashOn == 1)
+        else if (flashlight.flashOn == 1)
         {
-            flashlight.SetActive(true);
+            flashlight.flashlight.SetActive(true);
+            flashlight.flashing = true;
         }
 
-        if (flashOn >= 2)
+        if (flashlight.flashOn >= 2)
         {
-            flashOn = 0;
+            flashlight.flashOn = 0;
         }
     }
 
